@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+data/pdfs/*
+!data/pdfs/.gitkeep
+data/sources.json
+data/pages/*
+!data/pages/.gitkeep

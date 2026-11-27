@@ -1,0 +1,34 @@
+{
+  "queries": [
+    {
+      "query": "machine learning",
+      "operator": "AND",
+      "exclude": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "query": "database systems",
+      "operator": "OR",
+      "exclude": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "query": "neural networks",
+      "operator": "AND",
+      "exclude": "convolutional",
+      "relevant_doc_ids": []
+    },
+    {
+      "query": "data mining",
+      "operator": "AND",
+      "exclude": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "query": "information retrieval",
+      "operator": "OR",
+      "exclude": "",
+      "relevant_doc_ids": []
+    }
+  ]
+}

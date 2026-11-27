@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: transparent;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px 8px 20px;
+    border: 2px solid #7EE3B3;
+    border-radius: 32px;
+    background: #102838;
+    color: white;
+}
+
+.search-bar.light {
+    background: white;
+    color: #111;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-size: 16px;
+    padding: 10px 0;
+}
+
+input::placeholder { color: #91a5ad; }
+
+#mic {
+    border: 0;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    background: #7EE3B3;
+    color: #10251d;
+    font-size: 21px;
+}
+
+#mic.listening { background: #ffb4b4; }
+
+#language {
+    border: 1px solid #7EE3B3;
+    border-radius: 12px;
+    padding: 6px;
+    background: #102838;
+    color: white;
+}
+
+.light #language {
+    background: white;
+    color: #111;
+}
+
+#status {
+    font-size: 12px;
+    color: #78909c;
+    padding: 6px 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="search-bar" id="bar">
+    <span>📚</span>
+
+    <input
+        id="query"
+        type="text"
+        placeholder="What educational topic are you looking for?"
+    >
+
+    <select id="language" aria-label="Voice language">
+        <option value="en-US">EN</option>
+        <option value="ar-EG">AR</option>
+    </select>
+
+    <button id="mic" title="Start voice input">🎙</button>
+</div>
+
+<div id="status">Type or use the microphone</div>
+
+<script>
+const input = document.getElementById("query");
+const mic = document.getElementById("mic");
+const language = document.getElementById("language");
+const status = document.getElementById("status");
+const bar = document.getElementById("bar");
+
+let recognition = null;
+
+function sendValue() {
+    window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: "streamlit:setComponentValue",
+        value: { query: input.value }
+    }, "*");
+}
+
+function setHeight() {
+    window.parent.postMessage({
+        isStreamlitMessage: true,
+        type: "streamlit:setFrameHeight",
+        height: 90
+    }, "*");
+}
+
+window.addEventListener("message", (event) => {
+    const data = event.data;
+
+    if (data.type === "streamlit:render") {
+        bar.classList.toggle("light", !data.args.dark);
+        setHeight();
+    }
+});
+
+window.parent.postMessage({
+    isStreamlitMessage: true,
+    type: "streamlit:componentReady",
+    apiVersion: 1
+}, "*");
+
+input.addEventListener("input", sendValue);
+
+mic.addEventListener("click", () => {
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        status.textContent =
+            "Voice input is not supported in this browser.";
+        return;
+    }
+
+    if (recognition) {
+        recognition.stop();
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = language.value;
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+        mic.classList.add("listening");
+        status.textContent = "Listening…";
+    };
+
+    recognition.onresult = (event) => {
+        input.value = event.results[0][0].transcript;
+        sendValue();
+        status.textContent = "Voice converted to text";
+    };
+
+    recognition.onerror = (event) => {
+        status.textContent = "Microphone error: " + event.error;
+    };
+
+    recognition.onend = () => {
+        mic.classList.remove("listening");
+        recognition = null;
+    };
+
+    recognition.start();
+});
+</script>
+</body>
+</html>

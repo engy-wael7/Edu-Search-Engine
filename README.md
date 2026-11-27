@@ -149,7 +149,7 @@ The project is divided into five main areas:
 Collect only public educational resources you are permitted to access. Respect robots.txt, crawl delays, and source attribution.
 
 ---
-
+### ↪️ You can try it: https://edu-search-engine-j9ayblfgmfsusdhejjddcj.streamlit.app/
 <p align="center">
   <b>Educational Search Engine — Information Retrieval Project</b>
 </p>

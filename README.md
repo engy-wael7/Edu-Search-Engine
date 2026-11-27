@@ -16,6 +16,10 @@
 Edu-Search-Engine helps users search for educational resources using text and voice.
 
 
+## Project Overview
+
+Edu-Search-Engine helps users search for educational resources using text and voice.
+
 ## 📖 About the Project
 
 Educational Search Engine is an Information Retrieval project that collects educational web pages and PDFs, processes their content, and provides ranked search results through an interactive Streamlit interface.

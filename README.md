@@ -11,6 +11,10 @@
 </p>
 
 ---
+## Project Overview
+
+Edu-Search-Engine helps users search for educational resources using text and voice.
+
 
 ## 📖 About the Project
 

@@ -1,44 +1,155 @@
-# Educational Search Engine
+# 📚 Educational Search Engine
 
-A local Information Retrieval project for a growing collection of educational web pages and PDFs. It starts from topic-specific search results, then crawls a bounded set of links on the same approved educational site, scrapes readable page text, and downloads linked educational PDFs. The corpus grows automatically without manual uploads. It does not crawl the whole internet like Google.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Streamlit-Web%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit">
+  <img src="https://img.shields.io/badge/Information%20Retrieval-Search-0D9488?style=for-the-badge" alt="Information Retrieval">
+</p>
 
-## Crawling and scraping (the main collection stage)
+<p align="center">
+  <b>A focused educational search engine for discovering, indexing, and retrieving learning resources.</b>
+</p>
 
-- **Discover seeds:** DDGS finds a small set of starting pages for the topic on university, MIT OpenCourseWare, OpenStax, and arXiv domains.
-- **Crawl:** a breadth-first crawler follows links only on the same hostname as each seed, up to two link levels, with a cap of 20 HTML requests per search.
-- **Respect sites:** before requesting a page or PDF, the crawler checks `robots.txt`, uses a clear user agent, and waits at least the advertised crawl delay (minimum one second) between requests to a host.
-- **Scrape:** BeautifulSoup removes navigation, scripts, forms, and other page chrome, then extracts the title and readable body text. It also discovers PDF links.
-- **Collect files:** up to eight new PDFs per search are checked for approved host, size, and PDF signature before saving. HTML pages and PDFs are saved locally with source URLs.
+---
 
-This is the project's focused crawler, not a general web crawler: it can only find pages reachable from the search seeds, and the seed provider may return few results or block requests. The crawler keeps same-host traversal bounded to avoid wandering across the web.
+## 📖 About the Project
 
-## Search pipeline
+Educational Search Engine is an Information Retrieval project that collects educational web pages and PDFs, processes their content, and provides ranked search results through an interactive Streamlit interface.
 
-1. **Crawl and scrape:** discover educational seeds, follow same-site links, extract page text, and find PDF links.
-2. **Extract:** pypdf reads PDFs page by page; scraped HTML pages are indexed as individual documents.
-3. **Preprocess:** Unicode tokenization and stop-word removal clean documents and queries; NLTK POS tagging and WordNet lemmatization normalize English terms consistently. The first English search downloads the required NLTK data once.
-4. **Index:** a Python inverted index stores term postings and document frequency.
-5. **Retrieve:** OR is the default; AND requires a match for each query term; NOT excludes exact terms. Optional WordNet synonyms can expand terms within the indexed vocabulary.
-6. **Rank:** Log-TF × smoothed IDF weights and cosine similarity rank results. The best matching page from each PDF is shown to keep one large file from filling the list.
-7. **Display:** Streamlit shows ranked sources, relevance score, page, excerpt, and a link to the original page or PDF.
-8. **Evaluate:** add human relevance labels to `evaluation/relevance.json` and run `evaluate.py` for precision, recall, and average precision.
-9. **Deploy:** the app can be deployed from a GitHub repository on Streamlit Community Cloud. Cloud storage is temporary, so the corpus may need to be collected again after a restart.
+Unlike a general-purpose search engine, it focuses on approved educational domains and builds a growing local corpus through automated crawling and scraping.
 
-## Run locally
+The system supports Boolean search, relevance ranking, text preprocessing, and evaluation.
 
-Python 3.10–3.12 is recommended. In PowerShell, open this folder and run:
+## ✨ Features
 
-    py -m pip install -r requirements.txt
-    py -m streamlit run app.py
+- 🔍 Topic-based discovery of educational resources.
+- 🌐 Focused crawling of approved educational websites.
+- 📄 Automatic collection and extraction of web pages and PDFs.
+- 🧠 English text normalization using NLTK and WordNet.
+- 📚 Inverted index for efficient document retrieval.
+- ⚡ Boolean search using AND, OR, and NOT.
+- 📊 TF-IDF and cosine similarity ranking.
+- 🎨 Interactive Streamlit interface with ranked results.
+- 🧪 Search evaluation using precision, recall, and average precision.
 
-Internet access is needed for seed discovery, crawling, PDF downloads, and the first English search's NLTK data setup. Scanned image-only PDFs require OCR before their text can be indexed.
+## ⚙️ How It Works
 
-## Five-person split
+1. **Discover** — DDGS finds topic-specific educational seed pages.
+2. **Crawl** — A bounded crawler follows links on the same approved hostname.
+3. **Scrape** — BeautifulSoup extracts readable page content and PDF links.
+4. **Extract** — PDF text is extracted page by page using pypdf.
+5. **Preprocess** — Tokenization, stop-word removal, POS tagging, and lemmatization normalize the text.
+6. **Index** — An inverted index stores term postings and document frequencies.
+7. **Retrieve & Rank** — Boolean matching and TF-IDF cosine similarity rank relevant results.
+8. **Display** — The interface shows results with relevance scores, excerpts, and source links.
 
-1. Seed discovery, crawler limits, and site policy: `collector.py`
-2. HTML/PDF scraping and extraction: `collector.py` and `loader.py`
-3. Text normalization and lemmatization: `preprocessing.py`
-4. Inverted index, Boolean search, and ranking: `indexer.py`
-5. Streamlit interface, evaluation, deployment, and report: `app.py` and `evaluate.py`
+## 🛠️ Tech Stack
 
-Only collect public resources you are allowed to use. Keep source URLs and cite them in the project report.
+| Component | Technology |
+|---|---|
+| Language | Python |
+| Frontend | Streamlit |
+| Search Discovery | DDGS |
+| Web Scraping | BeautifulSoup |
+| PDF Processing | pypdf |
+| NLP | NLTK & WordNet |
+| Retrieval | Inverted Index, TF-IDF |
+| Evaluation | Precision, Recall, Average Precision |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.10, 3.11, or 3.12
+- Internet connection
+- Git (optional, for cloning the repository)
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/JomanaSobhy-Hub/Edu-Search-Engine.git
+cd Edu-Search-Engine
+```
+
+Install the dependencies:
+
+```bash
+py -m pip install -r requirements.txt
+```
+
+Run the application:
+
+```bash
+py -m streamlit run app.py
+```
+
+Open the local URL displayed in your terminal.
+
+## 📂 Project Structure
+
+```text
+Edu-Search-Engine/
+│
+├── app.py
+├── collector.py
+├── loader.py
+├── preprocessing.py
+├── indexer.py
+├── evaluate.py
+├── requirements.txt
+├── evaluation/
+│   └── relevance.json
+├── voice_search/
+│   └── index.html
+└── .streamlit/
+    └── config.toml
+```
+
+## 🔎 Search Capabilities
+
+| Search Mode | Description |
+|---|---|
+| OR | Matches any query term |
+| AND | Requires all query terms |
+| NOT | Excludes specified terms |
+| Synonyms | Expands queries using WordNet |
+
+## 📈 Evaluation
+
+Add human relevance labels to `evaluation/relevance.json`, then run:
+
+```bash
+py evaluate.py
+```
+
+The evaluation measures precision, recall, and average precision.
+
+## ⚠️ Limitations
+
+- The crawler is focused, not a full-web crawler.
+- Each search is limited to 20 HTML requests and eight new PDFs.
+- Search results depend on seed discovery and site accessibility.
+- Scanned PDFs require OCR before text extraction.
+- Cloud storage may be temporary after deployment.
+
+## 👥 Team Workflow
+
+The project is divided into five main areas:
+
+1. Seed discovery and crawler policy.
+2. HTML scraping and PDF extraction.
+3. Text preprocessing and normalization.
+4. Indexing, Boolean retrieval, and ranking.
+5. User interface, evaluation, deployment, and documentation.
+
+## 📜 Responsible Use
+
+Collect only public educational resources you are permitted to access. Respect robots.txt, crawl delays, and source attribution.
+
+---
+
+<p align="center">
+  <b>Educational Search Engine — Information Retrieval Project</b>
+</p>
